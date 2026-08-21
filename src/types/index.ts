@@ -48,3 +48,32 @@ export interface Notification {
   read: boolean;
   createdAt: string;
 }
+
+// Raw shape returned by POST /auth/login
+export interface DummyJsonLoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  image: string;
+}
+
+// The "user" your app cares about (no tokens mixed in)
+export interface AuthUser {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  image: string;
+}
+
+// Raw shape returned by POST /auth/refresh
+export interface DummyJsonRefreshResponse {
+  accessToken: string;
+  refreshToken: string;
+}
