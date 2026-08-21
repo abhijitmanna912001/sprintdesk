@@ -7,8 +7,10 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
+  isInitializing: boolean;
   setAuth: (user: AuthUser, accessToken: string, refreshToken: string) => void;
   setAccessToken: (accessToken: string) => void;
+  setInitialized: () => void;
   logout: () => void;
 }
 
@@ -19,11 +21,13 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
+      isInitializing: true,
 
       setAuth: (user, accessToken, refreshToken) =>
         set({ user, accessToken, refreshToken, isAuthenticated: true }),
 
       setAccessToken: (accessToken) => set({ accessToken }),
+      setInitialized: () => set({ isInitializing: false }),
 
       logout: () =>
         set({
