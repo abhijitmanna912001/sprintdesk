@@ -7,6 +7,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { BoardPage } from "./pages/BoardPage";
 import { AnalyticsPage } from "./pages/AnalyticsPage";
 import { useAuthStore } from "./store/authStore";
+import { AppLayout } from "./components/layout/AppLayout";
 
 function RootRedirect() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -33,7 +34,9 @@ function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <AppLayout>
+                <DashboardPage />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
@@ -42,7 +45,9 @@ function App() {
           path="/board"
           element={
             <ProtectedRoute>
-              <BoardPage />
+              <AppLayout>
+                <BoardPage />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
@@ -51,7 +56,9 @@ function App() {
           path="/analytics"
           element={
             <ProtectedRoute>
-              <AnalyticsPage />
+              <AppLayout>
+                <AnalyticsPage />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
