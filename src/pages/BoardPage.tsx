@@ -1,5 +1,14 @@
+import { Column } from "../components/board/Column";
 import { useTasks } from "../hooks/useTasks";
 import { useBoardStore } from "../store/boardStore";
+import type { TaskStatus } from "../types";
+
+const COLUMNS: { status: TaskStatus; title: string }[] = [
+  { status: "backlog", title: "Backlog" },
+  { status: "in-progress", title: "In Progress" },
+  { status: "review", title: "Review" },
+  { status: "done", title: "Done" },
+];
 
 export function BoardPage() {
   const { isLoading, isError } = useTasks();
@@ -16,15 +25,16 @@ export function BoardPage() {
   return (
     <div className="min-h-screen p-8">
       <h1 className="text-2xl font-semibold mb-4">Board</h1>
-      <p>{tasks.length} tasks loaded</p>
-      <ul className="mt-4 space-y-2">
-        {tasks.map((task) => (
-          <li key={task.id} className="border rounded p-2">
-            {task.title} —{" "}
-            <span className="text-sm text-gray-500">{task.status}</span>
-          </li>
+      <div className="flex gap-4 overflow-x-auto">
+        {COLUMNS.map((col) => (
+          <Column
+            key={col.status}
+            status={col.status}
+            title={col.title}
+            tasks={tasks}
+          />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
