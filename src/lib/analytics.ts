@@ -17,6 +17,11 @@ export interface PriorityBreakdownPoint {
   high: number;
 }
 
+export interface CompletionTrendPoint {
+  date: string;
+  completed: number;
+}
+
 const STATUS_LABELS: Record<Task["status"], string> = {
   backlog: "Backlog",
   "in-progress": "In Progress",
@@ -58,4 +63,21 @@ export function getPriorityBreakdown(tasks: Task[]): PriorityBreakdownPoint[] {
       high: statusTasks.filter((t) => t.priority === "high").length,
     };
   });
+}
+
+export function getCompletionTrend(tasks: Task[]): CompletionTrendPoint[] {
+  const completedTasks = tasks.filter((task) => task.completedAt !== null);
+
+  const countsByDate = completedTasks.reduce<Record<string, number>>(
+    (acc, task) => {
+      const date = task.completedAt!.split("T")[0]; // "2026-08-18T16:20:00Z" -> "2026-08-18"
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    },
+    {},
+  );
+
+  return Object.entries(countsByDate)
+    .map(([date, completed]) => ({ date, completed }))
+    .sort((a, b) => a.date.localeCompare(b.date));
 }

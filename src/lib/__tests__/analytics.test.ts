@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Sprint, Task } from "../../types";
 import {
+  getCompletionTrend,
   getPriorityBreakdown,
   getSprintVelocity,
   getTaskStatusDistribution,
@@ -74,5 +75,23 @@ describe("getPriorityBreakdown", () => {
       high: 2,
     });
     expect(result[3]).toEqual({ status: "Done", low: 0, medium: 1, high: 0 });
+  });
+});
+
+describe("getCompletionTrend", () => {
+  it("groups completed tasks by date, sorted chronologically", () => {
+    const testTasks: Task[] = [
+      { id: 1, completedAt: "2026-08-18T16:20:00Z" } as Task,
+      { id: 2, completedAt: "2026-08-18T10:00:00Z" } as Task,
+      { id: 3, completedAt: "2026-08-15T09:00:00Z" } as Task,
+      { id: 4, completedAt: null } as Task,
+    ];
+
+    const result = getCompletionTrend(testTasks);
+
+    expect(result).toEqual([
+      { date: "2026-08-15", completed: 1 },
+      { date: "2026-08-18", completed: 2 },
+    ]);
   });
 });
