@@ -1,3 +1,5 @@
+import { CompletionTrendChart } from "../components/analytics/CompletionTrendChart";
+import { PriorityChart } from "../components/analytics/PriorityChart";
 import { StatusChart } from "../components/analytics/StatusChart";
 import { VelocityChart } from "../components/analytics/VelocityChart";
 import { useSprints } from "../hooks/useSprints";
@@ -29,6 +31,8 @@ export function AnalyticsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StatusChart tasks={tasks} />
         <VelocityChart tasks={tasks} sprints={sprints} />
+        <PriorityChart tasks={tasks} />
+        <CompletionTrendChart tasks={tasks} />
       </div>
     </div>
   );
