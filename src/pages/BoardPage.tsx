@@ -1,10 +1,17 @@
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
 import { Column } from "../components/board/Column";
 import { useTasks } from "../hooks/useTasks";
 import { useUsers } from "../hooks/useUsers";
 import { getUsersById } from "../lib/users";
 import { useBoardStore } from "../store/boardStore";
-import type { TaskStatus } from "../types";
+import type { Task, TaskStatus } from "../types";
+import { useState } from "react";
+import { TaskCard } from "../components/board/TaskCard";
 
 const COLUMNS: { status: TaskStatus; title: string }[] = [
   { status: "backlog", title: "Backlog" },
@@ -23,9 +30,17 @@ export function BoardPage() {
 
   const tasks = useBoardStore((state) => state.tasks);
   const moveTask = useBoardStore((state) => state.moveTask);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  function handleDragStart(event: DragStartEvent) {
+    const task = tasks.find((t) => t.id === event.active.id);
+    setActiveTask(task ?? null);
+  }
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
+    setActiveTask(null);
+
     if (!over) return;
 
     const taskId = Number(active.id);
@@ -47,7 +62,7 @@ export function BoardPage() {
   return (
     <div className="min-h-screen p-8">
       <h1 className="text-2xl font-semibold mb-4">Board</h1>
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="flex gap-4 overflow-x-auto">
           {COLUMNS.map((col) => (
             <Column
@@ -59,6 +74,16 @@ export function BoardPage() {
             />
           ))}
         </div>
+
+        <DragOverlay>
+          {activeTask ? (
+            <TaskCard
+              task={activeTask}
+              assignee={usersById[activeTask.assigneeId]}
+              isOverlay
+            />
+          ) : null}
+        </DragOverlay>
       </DndContext>
     </div>
   );
