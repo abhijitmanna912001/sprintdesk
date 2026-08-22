@@ -1,7 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../store/authStore";
 import { useNotificationPolling } from "../../hooks/useNotificationPolling";
-import { useState } from "react";
+import { useAuthStore } from "../../store/authStore";
 import { useNotificationStore } from "../../store/notificationStore";
 import { NotificationPanel } from "../notifications/NotificationPanel";
 import { ToastContainer } from "../ui/ToastContainer";
@@ -15,7 +14,8 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
 
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const isPanelOpen = useNotificationStore((state) => state.isPanelOpen);
+  const setPanelOpen = useNotificationStore((state) => state.setPanelOpen);
   const notifications = useNotificationStore((state) => state.notifications);
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -51,7 +51,7 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
           <div className="relative">
             <button
               type="button"
-              onClick={() => setIsPanelOpen((prev) => !prev)}
+              onClick={() => setPanelOpen(!isPanelOpen)}
               aria-label={notificationLabel}
               className="relative text-gray-600 hover:text-gray-900"
             >
@@ -64,7 +64,7 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
             </button>
 
             {isPanelOpen && (
-              <NotificationPanel onClose={() => setIsPanelOpen(false)} />
+              <NotificationPanel onClose={() => setPanelOpen(false)} />
             )}
           </div>
 
