@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Sprint, Task } from "../../types";
-import { getSprintVelocity } from "../analytics";
+import { getSprintVelocity, getTaskStatusDistribution } from "../analytics";
 
 const sprints: Sprint[] = [
   { id: 1, name: "Sprint 1", startDate: "2026-07-20", endDate: "2026-07-31" },
@@ -30,5 +30,24 @@ describe("getSprintVelocity", () => {
     const result = getSprintVelocity(emptySprintTasks, sprints);
     expect(result[0].completed).toBe(0);
     expect(result[1].completed).toBe(0);
+  });
+});
+
+describe("getTaskStatusDistribution", () => {
+  it("counts tasks in each status", () => {
+    const testTasks: Task[] = [
+      { id: 1, status: "backlog" } as Task,
+      { id: 2, status: "backlog" } as Task,
+      { id: 3, status: "done" } as Task,
+    ];
+
+    const result = getTaskStatusDistribution(testTasks);
+
+    expect(result).toEqual([
+      { status: "Backlog", count: 2 },
+      { status: "In Progress", count: 0 },
+      { status: "Review", count: 0 },
+      { status: "Done", count: 1 },
+    ]);
   });
 });
