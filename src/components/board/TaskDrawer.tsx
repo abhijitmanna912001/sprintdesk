@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useUsers } from "../../hooks/useUsers";
 import { useBoardStore } from "../../store/boardStore";
-import type { Task, TaskPriority, User } from "../../types";
+import type { Comment, Task, TaskPriority, User } from "../../types";
+import { useComments } from "../../hooks/useComments";
+import { useAuthStore } from "../../store/authStore";
 
 interface TaskDrawerProps {
   task: Task;
@@ -19,6 +21,30 @@ export function TaskDrawer({
 
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState<Task>(task);
+
+  const { data: fetchedComments, isLoading: commentsLoading } = useComments(
+    task.id,
+  );
+  const currentUser = useAuthStore((state) => state.user);
+  const [localComments, setLocalComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState("");
+
+  const allComments = [...(fetchedComments ?? []), ...localComments];
+
+  function handleAddComment() {
+    if (!newComment.trim() || !currentUser) return;
+
+    const comment: Comment = {
+      id: Date.now(),
+      taskId: task.id,
+      authorId: currentUser.id,
+      message: newComment.trim(),
+      createdAt: new Date().toISOString(),
+    };
+
+    setLocalComments((prev) => [...prev, comment]);
+    setNewComment("");
+  }
 
   function updateDraft<K extends keyof Task>(field: K, value: Task[K]) {
     setDraft((prev) => ({ ...prev, [field]: value }));
@@ -141,9 +167,9 @@ export function TaskDrawer({
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 mt-6 pt-4 border-t">
+        <div className="flex justify-end mt-4">
           {isEditing ? (
-            <>
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={handleCancel}
@@ -158,7 +184,7 @@ export function TaskDrawer({
               >
                 Save
               </button>
-            </>
+            </div>
           ) : (
             <button
               type="button"
@@ -168,6 +194,48 @@ export function TaskDrawer({
               Edit
             </button>
           )}
+        </div>
+
+        <div className="mt-6 pt-4 border-t">
+          <h3 className="text-sm font-medium text-gray-500 mb-2">Comments</h3>
+
+          {commentsLoading ? (
+            <p className="text-sm text-gray-400">Loading comments...</p>
+          ) : (
+            <div className="space-y-3 mb-3">
+              {allComments.length === 0 && (
+                <p className="text-sm text-gray-400">No comments yet.</p>
+              )}
+              {allComments.map((comment) => {
+                const author = users?.find((u) => u.id === comment.authorId);
+                return (
+                  <div
+                    key={comment.id}
+                    className="text-sm bg-gray-50 rounded p-2"
+                  >
+                    <p className="font-medium">{author?.name ?? "Unknown"}</p>
+                    <p className="text-gray-600">{comment.message}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            <input
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Add a comment..."
+              className="flex-1 border rounded px-3 py-2 text-sm"
+            />
+            <button
+              type="button"
+              onClick={handleAddComment}
+              className="px-3 py-2 bg-blue-600 text-white rounded text-sm"
+            >
+              Post
+            </button>
+          </div>
         </div>
       </div>
     </div>
