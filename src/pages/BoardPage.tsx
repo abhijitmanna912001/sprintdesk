@@ -17,6 +17,7 @@ import { useCallback, useMemo, useState } from "react";
 import { TaskCard } from "../components/board/TaskCard";
 import { AddTaskModal } from "../components/board/AddTaskModal";
 import { TaskDrawer } from "../components/board/TaskDrawer";
+import { Button } from "../components/ui/Button";
 
 const COLUMNS: { status: TaskStatus; title: string }[] = [
   { status: "backlog", title: "Backlog" },
@@ -99,13 +100,7 @@ export function BoardPage() {
         <h1 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
           Board
         </h1>
-        <button
-          type="button"
-          onClick={() => setIsAddModalOpen(true)}
-          className="bg-blue-600 text-white rounded px-4 py-2"
-        >
-          Add Task
-        </button>
+        <Button onClick={() => setIsAddModalOpen(true)}>Add Task</Button>
       </div>
       <DndContext
         sensors={sensors}

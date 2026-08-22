@@ -5,6 +5,7 @@ import { useNotificationStore } from "../../store/notificationStore";
 import { NotificationPanel } from "../notifications/NotificationPanel";
 import { ToastContainer } from "../ui/ToastContainer";
 import { ThemeToggle } from "./ThemeToggle";
+import { Button } from "../ui/Button";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -78,13 +79,13 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
             </span>
           )}
 
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={handleLogout}
-            className="text-sm border border-gray-300 dark:border-gray-600 rounded px-3 py-1.5 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200"
+            className="text-sm px-3 py-1.5"
           >
             Logout
-          </button>
+          </Button>
         </div>
       </nav>
 
