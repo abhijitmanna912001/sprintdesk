@@ -28,20 +28,24 @@ export function NotificationPanel({
         onClick={onClose}
         aria-label="Close notifications"
       />
-      <div className="absolute right-0 top-full mt-2 w-80 bg-white border rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
-        <div className="flex items-center justify-between px-4 py-3 border-b">
-          <h3 className="font-semibold">Notifications</h3>
+      <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="font-semibold text-gray-900 dark:text-white">
+            Notifications
+          </h3>
           <button
             type="button"
             onClick={markAllAsRead}
-            className="text-xs text-blue-600 hover:underline"
+            className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
           >
             Mark all as read
           </button>
         </div>
 
         {pageItems.length === 0 ? (
-          <p className="text-sm text-gray-400 p-4">No notifications yet.</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 p-4">
+            No notifications yet.
+          </p>
         ) : (
           <div>
             {pageItems.map((notification) => (
@@ -49,12 +53,16 @@ export function NotificationPanel({
                 key={notification.id}
                 type="button"
                 onClick={() => markAsRead(notification.id)}
-                className={`w-full text-left px-4 py-3 border-b hover:bg-gray-50 ${
-                  notification.read ? "bg-white" : "bg-blue-50"
+                className={`w-full text-left px-4 py-3 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 ${
+                  notification.read
+                    ? "bg-white dark:bg-gray-800"
+                    : "bg-blue-50 dark:bg-blue-950"
                 }`}
               >
-                <p className="text-sm font-medium">{notification.title}</p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  {notification.title}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                   {notification.message}
                 </p>
               </button>
@@ -63,23 +71,23 @@ export function NotificationPanel({
         )}
 
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-2 border-t text-sm">
+          <div className="flex items-center justify-between px-4 py-2 border-t border-gray-200 dark:border-gray-700 text-sm">
             <button
               type="button"
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
-              className="disabled:opacity-30"
+              className="disabled:opacity-30 text-gray-700 dark:text-gray-300"
             >
               Previous
             </button>
-            <span className="text-gray-500">
+            <span className="text-gray-500 dark:text-gray-400">
               Page {page} of {totalPages}
             </span>
             <button
               type="button"
               disabled={page === totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="disabled:opacity-30"
+              className="disabled:opacity-30 text-gray-700 dark:text-gray-300"
             >
               Next
             </button>
