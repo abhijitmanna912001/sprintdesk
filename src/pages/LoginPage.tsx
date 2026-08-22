@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLogin } from "../hooks/useLogin";
+import { Button } from "../components/ui/Button";
 
 export function LoginPage() {
   const [username, setUsername] = useState("");
@@ -56,13 +57,9 @@ export function LoginPage() {
           </p>
         )}
 
-        <button
-          type="submit"
-          disabled={isPending}
-          className="w-full bg-blue-600 text-white rounded px-3 py-2 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={isPending} className="w-full">
           {isPending ? "Signing in..." : "Sign in"}
-        </button>
+        </Button>
       </form>
     </div>
   );
