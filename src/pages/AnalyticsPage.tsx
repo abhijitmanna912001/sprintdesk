@@ -26,8 +26,10 @@ export function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-2xl font-semibold mb-6">Analytics</h1>
+    <div className="min-h-screen p-8 bg-white dark:bg-gray-900">
+      <h1 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
+        Analytics
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StatusChart tasks={tasks} />
         <VelocityChart tasks={tasks} sprints={sprints} />

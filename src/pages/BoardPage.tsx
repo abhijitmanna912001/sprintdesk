@@ -94,9 +94,11 @@ export function BoardPage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-8 bg-white dark:bg-gray-900">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold">Board</h1>
+        <h1 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
+          Board
+        </h1>
         <button
           type="button"
           onClick={() => setIsAddModalOpen(true)}

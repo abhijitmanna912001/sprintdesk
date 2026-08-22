@@ -28,14 +28,16 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
   }
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "font-semibold underline" : "text-gray-600";
+    isActive
+      ? "font-semibold underline dark:text-white"
+      : "text-gray-600 dark:text-gray-400";
 
   const notificationLabel =
     unreadCount > 0 ? `Notifications, ${unreadCount} unread` : "Notifications";
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <nav className="border-b px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
+      <nav className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between">
         <div className="flex gap-6">
           <NavLink to="/dashboard" className={linkClass}>
             Dashboard
@@ -55,7 +57,7 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
               type="button"
               onClick={() => setPanelOpen(!isPanelOpen)}
               aria-label={notificationLabel}
-              className="relative text-gray-600 hover:text-gray-900"
+              className="relative text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
             >
               🔔
               {unreadCount > 0 && (
@@ -71,13 +73,15 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
           </div>
 
           {user && (
-            <span className="text-sm text-gray-600">{user.username}</span>
+            <span className="text-sm text-gray-600 dark:text-gray-300">
+              {user.username}
+            </span>
           )}
 
           <button
             type="button"
             onClick={handleLogout}
-            className="text-sm border rounded px-3 py-1.5 hover:bg-gray-50"
+            className="text-sm border border-gray-300 dark:border-gray-600 rounded px-3 py-1.5 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200"
           >
             Logout
           </button>
