@@ -6,6 +6,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { memo, useMemo } from "react";
 
 interface ColumnProps {
   status: TaskStatus;
@@ -15,14 +16,18 @@ interface ColumnProps {
   onTaskClick: (task: Task) => void;
 }
 
-export function Column({
+function ColumnComponent({
   status,
   title,
   tasks,
   usersById,
   onTaskClick,
 }: Readonly<ColumnProps>) {
-  const columnTasks = getTasksByStatus(tasks, status);
+  const columnTasks = useMemo(
+    () => getTasksByStatus(tasks, status),
+    [tasks, status],
+  );
+
   const { setNodeRef } = useDroppable({ id: status });
 
   return (
@@ -55,3 +60,5 @@ export function Column({
     </div>
   );
 }
+
+export const Column = memo(ColumnComponent);
