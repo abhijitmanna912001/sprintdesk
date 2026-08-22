@@ -1,5 +1,7 @@
 import { Column } from "../components/board/Column";
 import { useTasks } from "../hooks/useTasks";
+import { useUsers } from "../hooks/useUsers";
+import { getUsersById } from "../lib/users";
 import { useBoardStore } from "../store/boardStore";
 import type { TaskStatus } from "../types";
 
@@ -11,16 +13,25 @@ const COLUMNS: { status: TaskStatus; title: string }[] = [
 ];
 
 export function BoardPage() {
-  const { isLoading, isError } = useTasks();
+  const { isLoading: tasksLoading, isError: tasksError } = useTasks();
+
+  const {
+    data: users,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useUsers();
+
   const tasks = useBoardStore((state) => state.tasks);
 
-  if (isLoading) {
-    return <div className="p-8">Loading tasks...</div>;
+  if (tasksLoading || usersLoading) {
+    return <div className="p-8">Loading board...</div>;
   }
 
-  if (isError) {
-    return <div className="p-8">Failed to load tasks.</div>;
+  if (tasksError || usersError || !users) {
+    return <div className="p-8">Failed to load board data.</div>;
   }
+
+  const usersById = getUsersById(users);
 
   return (
     <div className="min-h-screen p-8">
@@ -32,6 +43,7 @@ export function BoardPage() {
             status={col.status}
             title={col.title}
             tasks={tasks}
+            usersById={usersById}
           />
         ))}
       </div>
