@@ -1,6 +1,9 @@
 import {
   DndContext,
   DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
@@ -33,6 +36,14 @@ export function BoardPage() {
   const moveTask = useBoardStore((state) => state.moveTask);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // must move 8px before a drag "activates"
+      },
+    }),
+  );
 
   function handleDragStart(event: DragStartEvent) {
     const task = tasks.find((t) => t.id === event.active.id);
@@ -87,7 +98,11 @@ export function BoardPage() {
           Add Task
         </button>
       </div>
-      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
         <div className="flex gap-4 overflow-x-auto">
           {COLUMNS.map((col) => (
             <Column
