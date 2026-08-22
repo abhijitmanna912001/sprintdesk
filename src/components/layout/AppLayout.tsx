@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
+import { useNotificationPolling } from "../../hooks/useNotificationPolling";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -9,6 +10,8 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
+
+  useNotificationPolling();
 
   function handleLogout() {
     logout();
