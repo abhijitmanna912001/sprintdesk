@@ -12,6 +12,7 @@ import { useBoardStore } from "../store/boardStore";
 import type { Task, TaskStatus } from "../types";
 import { useState } from "react";
 import { TaskCard } from "../components/board/TaskCard";
+import { AddTaskModal } from "../components/board/AddTaskModal";
 
 const COLUMNS: { status: TaskStatus; title: string }[] = [
   { status: "backlog", title: "Backlog" },
@@ -31,6 +32,7 @@ export function BoardPage() {
   const tasks = useBoardStore((state) => state.tasks);
   const moveTask = useBoardStore((state) => state.moveTask);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   function handleDragStart(event: DragStartEvent) {
     const task = tasks.find((t) => t.id === event.active.id);
@@ -75,7 +77,16 @@ export function BoardPage() {
 
   return (
     <div className="min-h-screen p-8">
-      <h1 className="text-2xl font-semibold mb-4">Board</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-semibold">Board</h1>
+        <button
+          type="button"
+          onClick={() => setIsAddModalOpen(true)}
+          className="bg-blue-600 text-white rounded px-4 py-2"
+        >
+          Add Task
+        </button>
+      </div>
       <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="flex gap-4 overflow-x-auto">
           {COLUMNS.map((col) => (
@@ -99,6 +110,9 @@ export function BoardPage() {
           ) : null}
         </DragOverlay>
       </DndContext>
+      {isAddModalOpen && (
+        <AddTaskModal onClose={() => setIsAddModalOpen(false)} />
+      )}
     </div>
   );
 }
