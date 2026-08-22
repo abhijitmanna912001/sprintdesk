@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useBoardStore } from "../../store/boardStore";
 import type { Task, TaskPriority } from "../../types";
 import { useUsers } from "../../hooks/useUsers";
+import { Button } from "../ui/Button";
 
 interface AddTaskModalProps {
   onClose: () => void;
@@ -40,12 +41,17 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4">Add Task</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+          Add Task
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
+            >
               Title
             </label>
             <input
@@ -54,14 +60,14 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             />
           </div>
 
           <div>
             <label
               htmlFor="priority"
-              className="block text-sm font-medium mb-1"
+              className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
             >
               Priority
             </label>
@@ -69,7 +75,7 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
               id="priority"
               value={priority}
               onChange={(e) => setPriority(e.target.value as TaskPriority)}
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -80,7 +86,7 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
           <div>
             <label
               htmlFor="assigneeId"
-              className="block text-sm font-medium mb-1"
+              className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
             >
               Assignee
             </label>
@@ -89,7 +95,7 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
               value={assigneeId}
               onChange={(e) => setAssigneeId(e.target.value)}
               required
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             >
               <option value="" disabled>
                 Select assignee
@@ -103,7 +109,10 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
           </div>
 
           <div>
-            <label htmlFor="dueDate" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="dueDate"
+              className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
+            >
               Due Date
             </label>
             <input
@@ -112,24 +121,15 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               required
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             />
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border rounded"
-            >
+            <Button type="button" variant="secondary" onClick={onClose}>
               Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded"
-            >
-              Add Task
-            </button>
+            </Button>
+            <Button type="submit">Add Task</Button>
           </div>
         </form>
       </div>
