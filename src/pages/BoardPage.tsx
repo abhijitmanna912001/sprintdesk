@@ -44,9 +44,23 @@ export function BoardPage() {
     if (!over) return;
 
     const taskId = Number(active.id);
-    const newStatus = over.id as TaskStatus;
+    const overId = over.id;
 
-    moveTask(taskId, newStatus, 0);
+    // Determine the target column: either `overId` IS a column status,
+    // or `overId` is a task id — in which case we look up THAT task's status.
+    const overTask = tasks.find((t) => t.id === overId);
+    const newStatus = (overTask ? overTask.status : overId) as TaskStatus;
+
+    // Determine target index within that column
+    const columnTasks = tasks
+      .filter((t) => t.status === newStatus && t.id !== taskId)
+      .sort((a, b) => a.order - b.order);
+
+    const newIndex = overTask
+      ? columnTasks.findIndex((t) => t.id === overTask.id)
+      : columnTasks.length; // dropped on empty column space → put at end
+
+    moveTask(taskId, newStatus, newIndex);
   }
 
   if (tasksLoading || usersLoading) {
