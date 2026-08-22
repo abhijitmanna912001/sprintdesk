@@ -19,8 +19,8 @@ export function PriorityChart({ tasks }: Readonly<PriorityChartProps>) {
   const data = getPriorityBreakdown(tasks);
 
   return (
-    <div className="bg-white border rounded-lg p-4">
-      <h3 className="font-semibold mb-4">Priority Breakdown</h3>
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+      <h3 className="font-semibold mb-4 text-gray-900 dark:text-white">Priority Breakdown</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />

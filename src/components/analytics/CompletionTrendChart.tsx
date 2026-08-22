@@ -20,8 +20,8 @@ export function CompletionTrendChart({
   const data = getCompletionTrend(tasks);
 
   return (
-    <div className="bg-white border rounded-lg p-4">
-      <h3 className="font-semibold mb-4">Completion Trend</h3>
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+      <h3 className="font-semibold mb-4 text-gray-900 dark:text-white">Completion Trend</h3>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
