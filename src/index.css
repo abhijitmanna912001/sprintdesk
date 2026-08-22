@@ -6,3 +6,7 @@
     cursor: pointer;
   }
 }
+
+.dark input[type="date"] {
+  color-scheme: dark;
+}

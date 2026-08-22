@@ -5,6 +5,7 @@ import { useUsers } from "../../hooks/useUsers";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
+import { Modal } from "../ui/Modal";
 
 interface AddTaskModalProps {
   onClose: () => void;
@@ -42,75 +43,61 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
-          Add Task
-        </h2>
+    <Modal title="Add Task" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Title"
+          id="title"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Input
-              label="Title"
-              id="title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-          </div>
+        <Select
+          label="Priority"
+          id="priority"
+          value={priority}
+          onChange={(e) => setPriority(e.target.value as TaskPriority)}
+        >
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </Select>
 
-          <div>
-            <Select
-              label="Priority"
-              id="priority"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value as TaskPriority)}
-            >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </Select>
-          </div>
+        <Select
+          label="Assignee"
+          id="assigneeId"
+          value={assigneeId}
+          onChange={(e) => setAssigneeId(e.target.value)}
+          required
+        >
+          <option value="" disabled>
+            Select assignee
+          </option>
+          {users?.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.name}
+            </option>
+          ))}
+        </Select>
 
-          <div>
-            <Select
-              label="Assignee"
-              id="assigneeId"
-              value={assigneeId}
-              onChange={(e) => setAssigneeId(e.target.value)}
-              required
-            >
-              <option value="" disabled>
-                Select assignee
-              </option>
-              {users?.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.name}
-                </option>
-              ))}
-            </Select>
-          </div>
+        <Input
+          label="Due Date"
+          id="dueDate"
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          required
+        />
 
-          <div>
-            <Input
-              label="Due Date"
-              id="dueDate"
-              type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="secondary" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit">Add Task</Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <div className="flex justify-end gap-2 pt-2">
+          <Button type="button" variant="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit">Add Task</Button>
+        </div>
+      </form>
+    </Modal>
   );
 }
