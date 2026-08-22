@@ -4,7 +4,8 @@ import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 import { PublicOnlyRoute } from "./components/layout/PublicOnlyRoute";
 import { useAuthStore } from "./store/authStore";
 import { AppLayout } from "./components/layout/AppLayout";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { useThemeStore } from "./store/themeStore";
 
 const LoginPage = lazy(() =>
   import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
@@ -41,6 +42,12 @@ function PageLoadingFallback() {
 }
 
 function App() {
+  const theme = useThemeStore((state) => state.theme);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
+
   return (
     <AuthInitializer>
       <Suspense fallback={<PageLoadingFallback />}>
