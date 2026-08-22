@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Sprint, Task } from "../../types";
-import { getSprintVelocity, getTaskStatusDistribution } from "../analytics";
+import {
+  getPriorityBreakdown,
+  getSprintVelocity,
+  getTaskStatusDistribution,
+} from "../analytics";
 
 const sprints: Sprint[] = [
   { id: 1, name: "Sprint 1", startDate: "2026-07-20", endDate: "2026-07-31" },
@@ -49,5 +53,26 @@ describe("getTaskStatusDistribution", () => {
       { status: "Review", count: 0 },
       { status: "Done", count: 1 },
     ]);
+  });
+});
+
+describe("getPriorityBreakdown", () => {
+  it("breaks down priority counts per status", () => {
+    const testTasks: Task[] = [
+      { id: 1, status: "backlog", priority: "high" } as Task,
+      { id: 2, status: "backlog", priority: "high" } as Task,
+      { id: 3, status: "backlog", priority: "low" } as Task,
+      { id: 4, status: "done", priority: "medium" } as Task,
+    ];
+
+    const result = getPriorityBreakdown(testTasks);
+
+    expect(result[0]).toEqual({
+      status: "Backlog",
+      low: 1,
+      medium: 0,
+      high: 2,
+    });
+    expect(result[3]).toEqual({ status: "Done", low: 0, medium: 1, high: 0 });
   });
 });
