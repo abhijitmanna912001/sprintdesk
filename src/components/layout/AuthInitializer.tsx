@@ -28,7 +28,9 @@ export function AuthInitializer({ children }: Readonly<AuthInitializerProps>) {
         setInitialized();
       }
     }
+
     restoreSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally run once on mount to validate session; refreshToken is read from store at mount time only
   }, []);
 
   if (isInitializing) {

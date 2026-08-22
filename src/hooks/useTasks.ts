@@ -17,7 +17,7 @@ export function useTasks() {
     if (query.data) {
       setTasks(query.data);
     }
-  }, [query.data]);
+  }, [query.data, setTasks]);
 
   return query;
 }

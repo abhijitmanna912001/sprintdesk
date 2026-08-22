@@ -7,12 +7,14 @@ interface TaskCardProps {
   task: Task;
   assignee: User | undefined;
   isOverlay?: boolean;
+  onClick?: () => void;
 }
 
 export function TaskCard({
   task,
   assignee,
   isOverlay = false,
+  onClick,
 }: Readonly<TaskCardProps>) {
   const deleteTask = useBoardStore((state) => state.deleteTask);
 
@@ -37,15 +39,27 @@ export function TaskCard({
   }
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={`bg-white border rounded p-3 shadow-sm relative group ${
-        isOverlay ? "cursor-grabbing shadow-lg" : "cursor-grab"
-      }`}
-    >
+    <div className="relative group">
+      <button
+        type="button"
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        onClick={onClick}
+        aria-label={`Task: ${task.title}`}
+        className={`w-full text-left bg-white border rounded p-3 shadow-sm ${
+          isOverlay ? "cursor-grabbing shadow-lg" : "cursor-grab"
+        }`}
+      >
+        <p className="font-medium pr-6">{task.title}</p>
+        <p className="text-sm text-gray-500">{task.priority}</p>
+        <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+          <span>{assignee?.name ?? "Unassigned"}</span>
+          <span>{task.dueDate}</span>
+        </div>
+      </button>
+
       {!isOverlay && (
         <button
           type="button"
@@ -57,13 +71,6 @@ export function TaskCard({
           ✕
         </button>
       )}
-
-      <p className="font-medium pr-6">{task.title}</p>
-      <p className="text-sm text-gray-500">{task.priority}</p>
-      <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
-        <span>{assignee?.name ?? "Unassigned"}</span>
-        <span>{task.dueDate}</span>
-      </div>
     </div>
   );
 }

@@ -16,6 +16,7 @@ import type { Task, TaskStatus } from "../types";
 import { useState } from "react";
 import { TaskCard } from "../components/board/TaskCard";
 import { AddTaskModal } from "../components/board/AddTaskModal";
+import { TaskDrawer } from "../components/board/TaskDrawer";
 
 const COLUMNS: { status: TaskStatus; title: string }[] = [
   { status: "backlog", title: "Backlog" },
@@ -36,6 +37,7 @@ export function BoardPage() {
   const moveTask = useBoardStore((state) => state.moveTask);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -111,6 +113,7 @@ export function BoardPage() {
               title={col.title}
               tasks={tasks}
               usersById={usersById}
+              onTaskClick={setSelectedTask}
             />
           ))}
         </div>
@@ -125,8 +128,17 @@ export function BoardPage() {
           ) : null}
         </DragOverlay>
       </DndContext>
+
       {isAddModalOpen && (
         <AddTaskModal onClose={() => setIsAddModalOpen(false)} />
+      )}
+
+      {selectedTask && (
+        <TaskDrawer
+          task={selectedTask}
+          assignee={usersById[selectedTask.assigneeId]}
+          onClose={() => setSelectedTask(null)}
+        />
       )}
     </div>
   );

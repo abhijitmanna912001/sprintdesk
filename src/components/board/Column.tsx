@@ -2,13 +2,17 @@ import { useDroppable } from "@dnd-kit/core";
 import { getTasksByStatus } from "../../lib/board";
 import type { Task, TaskStatus, User } from "../../types";
 import { TaskCard } from "./TaskCard";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 interface ColumnProps {
   status: TaskStatus;
   title: string;
   tasks: Task[];
   usersById: Record<number, User>;
+  onTaskClick: (task: Task) => void;
 }
 
 export function Column({
@@ -16,6 +20,7 @@ export function Column({
   title,
   tasks,
   usersById,
+  onTaskClick,
 }: Readonly<ColumnProps>) {
   const columnTasks = getTasksByStatus(tasks, status);
   const { setNodeRef } = useDroppable({ id: status });
@@ -42,6 +47,7 @@ export function Column({
               key={task.id}
               task={task}
               assignee={usersById[task.assigneeId]}
+              onClick={() => onTaskClick(task)}
             />
           ))}
         </div>
