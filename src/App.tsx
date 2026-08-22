@@ -2,12 +2,29 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthInitializer } from "./components/layout/AuthInitializer";
 import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 import { PublicOnlyRoute } from "./components/layout/PublicOnlyRoute";
-import { DashboardPage } from "./pages/DashboardPage";
-import { LoginPage } from "./pages/LoginPage";
-import { BoardPage } from "./pages/BoardPage";
-import { AnalyticsPage } from "./pages/AnalyticsPage";
 import { useAuthStore } from "./store/authStore";
 import { AppLayout } from "./components/layout/AppLayout";
+import { lazy, Suspense } from "react";
+
+const LoginPage = lazy(() =>
+  import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
+);
+
+const DashboardPage = lazy(() =>
+  import("./pages/DashboardPage").then((module) => ({
+    default: module.DashboardPage,
+  })),
+);
+
+const BoardPage = lazy(() =>
+  import("./pages/BoardPage").then((module) => ({ default: module.BoardPage })),
+);
+
+const AnalyticsPage = lazy(() =>
+  import("./pages/AnalyticsPage").then((module) => ({
+    default: module.AnalyticsPage,
+  })),
+);
 
 function RootRedirect() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -15,54 +32,64 @@ function RootRedirect() {
   return <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />;
 }
 
+function PageLoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-gray-400">Loading...</p>
+    </div>
+  );
+}
+
 function App() {
   return (
     <AuthInitializer>
-      <Routes>
-        <Route path="/" element={<RootRedirect />} />
+      <Suspense fallback={<PageLoadingFallback />}>
+        <Routes>
+          <Route path="/" element={<RootRedirect />} />
 
-        <Route
-          path="/login"
-          element={
-            <PublicOnlyRoute>
-              <LoginPage />
-            </PublicOnlyRoute>
-          }
-        />
+          <Route
+            path="/login"
+            element={
+              <PublicOnlyRoute>
+                <LoginPage />
+              </PublicOnlyRoute>
+            }
+          />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <AppLayout>
-                <DashboardPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <DashboardPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/board"
-          element={
-            <ProtectedRoute>
-              <AppLayout>
-                <BoardPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/board"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <BoardPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/analytics"
-          element={
-            <ProtectedRoute>
-              <AppLayout>
-                <AnalyticsPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <AnalyticsPage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
     </AuthInitializer>
   );
 }
