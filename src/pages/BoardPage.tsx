@@ -18,6 +18,7 @@ import { TaskCard } from "../components/board/TaskCard";
 import { AddTaskModal } from "../components/board/AddTaskModal";
 import { TaskDrawer } from "../components/board/TaskDrawer";
 import { Button } from "../components/ui/Button";
+import { Skeleton } from "../components/ui/Skeleton";
 
 const COLUMNS: { status: TaskStatus; title: string }[] = [
   { status: "backlog", title: "Backlog" },
@@ -87,7 +88,21 @@ export function BoardPage() {
   );
 
   if (tasksLoading || usersLoading) {
-    return <div className="p-8">Loading board...</div>;
+    return (
+      <div className="min-h-screen p-8 bg-white dark:bg-gray-900">
+        <Skeleton className="h-8 w-32 mb-6" />
+        <div className="flex gap-4">
+          {[1, 2, 3, 4].map((col) => (
+            <div key={col} className="flex-1 min-w-62.5 space-y-2">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (tasksError || usersError || !users) {
