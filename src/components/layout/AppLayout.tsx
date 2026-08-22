@@ -4,6 +4,7 @@ import { useNotificationPolling } from "../../hooks/useNotificationPolling";
 import { useState } from "react";
 import { useNotificationStore } from "../../store/notificationStore";
 import { NotificationPanel } from "../notifications/NotificationPanel";
+import { ToastContainer } from "../ui/ToastContainer";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -82,6 +83,7 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
       </nav>
 
       <main className="flex-1">{children}</main>
+      <ToastContainer />
     </div>
   );
 }
