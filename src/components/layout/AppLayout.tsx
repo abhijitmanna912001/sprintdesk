@@ -4,6 +4,7 @@ import { useAuthStore } from "../../store/authStore";
 import { useNotificationStore } from "../../store/notificationStore";
 import { NotificationPanel } from "../notifications/NotificationPanel";
 import { ToastContainer } from "../ui/ToastContainer";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -48,6 +49,7 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
         </div>
 
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <div className="relative">
             <button
               type="button"
