@@ -13,7 +13,7 @@ import { useUsers } from "../hooks/useUsers";
 import { getUsersById } from "../lib/users";
 import { useBoardStore } from "../store/boardStore";
 import type { Task, TaskStatus } from "../types";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { TaskCard } from "../components/board/TaskCard";
 import { AddTaskModal } from "../components/board/AddTaskModal";
 import { TaskDrawer } from "../components/board/TaskDrawer";
@@ -41,6 +41,8 @@ export function BoardPage() {
 
   const selectedTask = tasks.find((t) => t.id === selectedTaskId) ?? null;
 
+  const usersById = useMemo(() => (users ? getUsersById(users) : {}), [users]);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -49,36 +51,39 @@ export function BoardPage() {
     }),
   );
 
-  function handleDragStart(event: DragStartEvent) {
-    const task = tasks.find((t) => t.id === event.active.id);
-    setActiveTask(task ?? null);
-  }
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      const task = tasks.find((t) => t.id === event.active.id);
+      setActiveTask(task ?? null);
+    },
+    [tasks],
+  );
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    setActiveTask(null);
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      setActiveTask(null);
 
-    if (!over) return;
+      if (!over) return;
 
-    const taskId = Number(active.id);
-    const overId = over.id;
+      const taskId = Number(active.id);
+      const overId = over.id;
 
-    // Determine the target column: either `overId` IS a column status,
-    // or `overId` is a task id — in which case we look up THAT task's status.
-    const overTask = tasks.find((t) => t.id === overId);
-    const newStatus = (overTask ? overTask.status : overId) as TaskStatus;
+      const overTask = tasks.find((t) => t.id === overId);
+      const newStatus = (overTask ? overTask.status : overId) as TaskStatus;
 
-    // Determine target index within that column
-    const columnTasks = tasks
-      .filter((t) => t.status === newStatus && t.id !== taskId)
-      .sort((a, b) => a.order - b.order);
+      const columnTasks = tasks
+        .filter((t) => t.status === newStatus && t.id !== taskId)
+        .sort((a, b) => a.order - b.order);
 
-    const newIndex = overTask
-      ? columnTasks.findIndex((t) => t.id === overTask.id)
-      : columnTasks.length; // dropped on empty column space → put at end
+      const newIndex = overTask
+        ? columnTasks.findIndex((t) => t.id === overTask.id)
+        : columnTasks.length;
 
-    moveTask(taskId, newStatus, newIndex);
-  }
+      moveTask(taskId, newStatus, newIndex);
+    },
+    [tasks, moveTask],
+  );
 
   if (tasksLoading || usersLoading) {
     return <div className="p-8">Loading board...</div>;
@@ -87,8 +92,6 @@ export function BoardPage() {
   if (tasksError || usersError || !users) {
     return <div className="p-8">Failed to load board data.</div>;
   }
-
-  const usersById = getUsersById(users);
 
   return (
     <div className="min-h-screen p-8">
