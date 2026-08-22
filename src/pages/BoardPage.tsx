@@ -37,7 +37,9 @@ export function BoardPage() {
   const moveTask = useBoardStore((state) => state.moveTask);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
+
+  const selectedTask = tasks.find((t) => t.id === selectedTaskId) ?? null;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -113,7 +115,7 @@ export function BoardPage() {
               title={col.title}
               tasks={tasks}
               usersById={usersById}
-              onTaskClick={setSelectedTask}
+              onTaskClick={(task) => setSelectedTaskId(task.id)}
             />
           ))}
         </div>
@@ -137,7 +139,7 @@ export function BoardPage() {
         <TaskDrawer
           task={selectedTask}
           assignee={usersById[selectedTask.assigneeId]}
-          onClose={() => setSelectedTask(null)}
+          onClose={() => setSelectedTaskId(null)}
         />
       )}
     </div>
