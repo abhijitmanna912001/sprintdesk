@@ -3,6 +3,8 @@ import { useBoardStore } from "../../store/boardStore";
 import type { Task, TaskPriority } from "../../types";
 import { useUsers } from "../../hooks/useUsers";
 import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
+import { Select } from "../ui/Select";
 
 interface AddTaskModalProps {
   onClose: () => void;
@@ -48,54 +50,36 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
-            >
-              Title
-            </label>
-            <input
+            <Input
+              label="Title"
               id="title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="priority"
-              className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
-            >
-              Priority
-            </label>
-            <select
+            <Select
+              label="Priority"
               id="priority"
               value={priority}
               onChange={(e) => setPriority(e.target.value as TaskPriority)}
-              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
-            </select>
+            </Select>
           </div>
 
           <div>
-            <label
-              htmlFor="assigneeId"
-              className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
-            >
-              Assignee
-            </label>
-            <select
+            <Select
+              label="Assignee"
               id="assigneeId"
               value={assigneeId}
               onChange={(e) => setAssigneeId(e.target.value)}
               required
-              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             >
               <option value="" disabled>
                 Select assignee
@@ -105,23 +89,17 @@ export function AddTaskModal({ onClose }: Readonly<AddTaskModalProps>) {
                   {user.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
-            <label
-              htmlFor="dueDate"
-              className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
-            >
-              Due Date
-            </label>
-            <input
+            <Input
+              label="Due Date"
               id="dueDate"
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               required
-              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             />
           </div>
 
