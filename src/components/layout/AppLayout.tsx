@@ -38,8 +38,8 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
-      <nav className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between">
-        <div className="flex gap-6">
+      <nav className="border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-y-3">
+        <div className="flex gap-4 sm:gap-6 order-1">
           <NavLink to="/dashboard" className={linkClass}>
             Dashboard
           </NavLink>
@@ -51,7 +51,7 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
           </NavLink>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 order-2">
           <ThemeToggle />
           <div className="relative">
             <button
@@ -74,7 +74,7 @@ export function AppLayout({ children }: Readonly<AppLayoutProps>) {
           </div>
 
           {user && (
-            <span className="text-sm text-gray-600 dark:text-gray-300">
+            <span className="hidden sm:inline text-sm text-gray-600 dark:text-gray-300">
               {user.username}
             </span>
           )}
