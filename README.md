@@ -1,32 +1,39 @@
-# React + TypeScript + Vite
+# SprintDesk — Sprint Management Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A sprint management dashboard with authentication, drag-and-drop Kanban board, analytics, notifications, and light/dark theming. Built with React 19, TypeScript, TanStack Query, Zustand, Tailwind v4, and @dnd-kit.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Runs at `http://localhost:5173`. No environment variables required — all APIs (DummyJSON, JSONPlaceholder) are public and keyless.
+
+**Test login:** `emilys` / `emilyspass` (any DummyJSON account works)
+
+## Testing
+
+```bash
+npm run test
+```
+
+15 tests covering the board store, `useToast`, and the auth interceptor's refresh/retry flow (via MSW).
+
+> Node 25+: if you hit `localStorage` test errors, this is a known Node/jsdom conflict, already worked around via `NODE_OPTIONS=--no-webstorage` in the test script.
+
+## Architecture
+
+See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for system design and data flow.
+
+## Known Limitations
+
+- **Comments don't persist** across drawer close/refresh — they're session-local state, since `mock-data.json` can't be written back to and the spec doesn't require this persistence explicitly. Pre-existing mock comments always display correctly.
+- **Dark mode** covers all core pages and components except the Login page (no toggle is reachable from it).
+- **Keyboard drag-and-drop reordering** isn't implemented (cards are keyboard-focusable/clickable, but not keyboard-draggable).
+- Bonus features not implemented: Remember Me, password strength meter, undo drag, priority/assignee filters, Storybook, axe-core, chart date filtering/export.
+
+## Security
+
+No credentials or API keys are committed — DummyJSON and JSONPlaceholder require none.
