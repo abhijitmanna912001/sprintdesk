@@ -1,5 +1,7 @@
 # SprintDesk — Sprint Management Dashboard
 
+**Live Demo:** [sprintdesk-taupe.vercel.app](https://sprintdesk-taupe.vercel.app/)
+
 A sprint management dashboard with authentication, drag-and-drop Kanban board, analytics, notifications, and light/dark theming. Built with React 19, TypeScript, TanStack Query, Zustand, Tailwind v4, and @dnd-kit.
 
 ## Setup
