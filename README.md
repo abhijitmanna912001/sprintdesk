@@ -23,9 +23,10 @@ npm run test
 
 > Node 25+: if you hit `localStorage` test errors, this is a known Node/jsdom conflict, already worked around via `NODE_OPTIONS=--no-webstorage` in the test script.
 
-## Architecture
+## Documentation
 
-See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for system design and data flow.
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — system design, folder structure, and key data flows
+- [`API.md`](./API.md) — every endpoint the app calls, with request/response shapes
 
 ## Known Limitations
 
