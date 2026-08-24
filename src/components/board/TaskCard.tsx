@@ -2,6 +2,9 @@ import { useSortable } from "@dnd-kit/sortable";
 import type { Task, User } from "../../types";
 import { CSS } from "@dnd-kit/utilities";
 import { useBoardStore } from "../../store/boardStore";
+import { useState } from "react";
+import { Modal } from "../ui/Modal";
+import { Button } from "../ui/Button";
 
 interface TaskCardProps {
   task: Task;
@@ -16,6 +19,8 @@ export function TaskCard({
   isOverlay = false,
   onClick,
 }: Readonly<TaskCardProps>) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
   const deleteTask = useBoardStore((state) => state.deleteTask);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -28,14 +33,14 @@ export function TaskCard({
     transition,
   };
 
-  function handleDelete(e: React.MouseEvent) {
+  function handleDeleteClick(e: React.MouseEvent) {
     e.stopPropagation();
-    const confirmed = window.confirm(
-      `Delete "${task.title}"? This cannot be undone.`,
-    );
-    if (confirmed) {
-      deleteTask(task.id);
-    }
+    setShowDeleteConfirm(true);
+  }
+
+  function confirmDelete() {
+    deleteTask(task.id);
+    setShowDeleteConfirm(false);
   }
 
   return (
@@ -67,13 +72,32 @@ export function TaskCard({
       {!isOverlay && (
         <button
           type="button"
-          onClick={handleDelete}
+          onClick={handleDeleteClick}
           onPointerDown={(e) => e.stopPropagation()}
           aria-label={`Delete task ${task.title}`}
           className="absolute top-2 right-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
         >
           ✕
         </button>
+      )}
+
+      {showDeleteConfirm && (
+        <Modal title="Delete task" onClose={() => setShowDeleteConfirm(false)}>
+          <p className="text-gray-700 dark:text-gray-300 mb-6">
+            Delete "{task.title}"? This cannot be undone.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => setShowDeleteConfirm(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </div>
+        </Modal>
       )}
     </div>
   );
